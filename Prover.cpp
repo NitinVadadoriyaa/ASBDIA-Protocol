@@ -14,9 +14,9 @@ using namespace std;
 using namespace CryptoPP;
 int DATAFILE_TOTAL_ROWS = 11535; //original total DATAFILE_TOTAL_ROWS/blocks in datafile
 int DATAFILE_SECTOR_NUM =  100000; // sector size in each block
-int SEED_BLOCK_NUMBER = 101;
+long long SEED_BLOCK_NUMBER = 101;
 
-#define PORT 8010
+#define PORT 8011
 
 void Proof_gen(char* filePath,int r,char* fileName,int seed,vector<int> &blc);
 void sendFile(const char* fileName,int &server_fd,const sockaddr_in& client_addr);
@@ -70,7 +70,9 @@ void Start_Server() {
 		
 		cout << "message coming from IP: " << inet_ntoa(client_addr.sin_addr) << " Port: " << ntohs(client_addr.sin_port) << std::endl;
 
-		int seed =  stoi(string(buffer));
+		long long seed =  stoi(string(buffer));
+		SEED_BLOCK_NUMBER = seed + 1;
+		
 		cout << "Reciev seed " << seed << endl;
 		memset(buffer,0,sizeof(buffer));
 		
@@ -96,6 +98,7 @@ void Start_Server() {
 	 	 		}
   			}
   		}	
+		sort(block_ind.begin(),block_ind.end());
 		
 		Proof_gen("datafile.bin",DATAFILE_SECTOR_NUM,"Mue.bin",seed,block_ind);
 		sendFile("Mue.bin",server_fd,client_addr);
@@ -179,12 +182,12 @@ cout << "Please wait, Mue file sending is going...." << endl;
 	 streampos fileSize = file.tellg();
 	 file.seekg(0, std::ios::beg);
 	if (static_cast<int>(fileSize) > 1024) {
-		cout << "file size " << static_cast<int>(fileSize) << endl;
+		//cout << "file size " << static_cast<int>(fileSize) << endl;
 		size_t numFragments = static_cast<int>(fileSize) / 1024;
 		size_t lastFragmentSize = static_cast<int>(fileSize) % 1024;
 		char* buffer = new char[1024];
-		cout << numFragments << endl;
-		cout << lastFragmentSize << endl;
+		//cout << numFragments << endl;
+		//cout << lastFragmentSize << endl;
 
 		for (size_t i = 0; i < numFragments; ++i) {
    			file.read(buffer, 1024);

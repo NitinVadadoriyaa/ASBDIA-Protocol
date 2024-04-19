@@ -24,7 +24,7 @@ int main() {
 	cout << "Enter percentage : ";
 	cin >> percent;
 	
-	long long p_block = ceil((static_cast<long long>(fileSize) * percent * 8) / 100.0); // * 8 --> because we want to modifiy on bits not byte.
+	long long p_block = ceil((static_cast<long long>(fileSize) * percent) / 100.0); // * 8 --> because we want to modifiy on byte.
 	cout << p_block << " bits Modification is started randomly.." << endl;
 	
 	srand(SEED);

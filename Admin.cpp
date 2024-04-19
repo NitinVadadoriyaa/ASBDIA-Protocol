@@ -80,7 +80,7 @@ void Start_Server() {
 
 
 int main() {
-	string file;
+	/*string file;
 	cout << "Enter file name : ";
 	cin >> file;
 	const char* filePath = file.c_str();
@@ -103,9 +103,9 @@ int main() {
     readFile.close();
     vector<GF256::Element>key = {123,200,15}; // ------ alph key ---------------------------------------------------------------------------- //
 	Tag_gen(filePath,key,M,Rows);
-	
-	return 0;
+	*/
 	Start_Server();
+	return 0;
 
 }
 

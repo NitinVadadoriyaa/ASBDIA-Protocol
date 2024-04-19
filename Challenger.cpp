@@ -17,11 +17,11 @@ using namespace CryptoPP;
 using namespace std;
 
 //int PROCESS_BLOCK_NUM = 100; // no of random block in which we only interested... TAKEN FROM USER...
-int SEED_VECTOR_VALUE = 100; // Generate vector 1 * n -values..
+long long SEED_VECTOR_VALUE = 100; // Generate vector 1 * n -values..
 int TAG_SECTOR_NUM = 3; //TAG_SECTOR_NUM ---> no of sector in tag-file
 int DATAFILE_SECTOR_NUM = 100000; //DATAFILE_SECTOR_NUM ---> no of sector in data-file / mue.bin file
 int TAG_ROWS_COUNT = 11535; // Number of TAG_ROWS_COUNT in Tag File..
-int SEED_BLOCK_NUMBER = 101;
+long long SEED_BLOCK_NUMBER = 101;
 
 GF256::Element calculate_mac(vector<GF256::Element> &block, GF256::Element key,int DATAFILE_SECTOR_NUM);
 bool verifyProof(int PROCESS_BLOCK_NUM);
@@ -45,7 +45,7 @@ void Send_msg(const char *server_ip) {
 	}
 
 	serv_addr_prover.sin_family = AF_INET;
-	serv_addr_prover.sin_port = htons(8010); // os automatically assign available port
+	serv_addr_prover.sin_port = htons(8011); // os automatically assign available port
 	
 	
 	
@@ -54,6 +54,7 @@ void Send_msg(const char *server_ip) {
 		return;
 	}
 	
+	srand(time(0));
 	while(true) {
 	//-------------------------------- PROCESS_BLOCK_NUM change hear ------------------------- //
 		cout << "Enter percent to challange : ";
@@ -62,7 +63,12 @@ void Send_msg(const char *server_ip) {
 		int PROCESS_BLOCK_NUM = ceil((per * TAG_ROWS_COUNT) / 100.0);
 		cout << "Challange is sending....!" << endl;
 		
+		//--------make seed random--------------//
+		SEED_VECTOR_VALUE = rand();
+		SEED_BLOCK_NUMBER = SEED_VECTOR_VALUE + 1;
+		
 		string str = to_string(SEED_VECTOR_VALUE);
+		
 		sendto(client_fd, str.c_str(), str.length(), 0, (struct sockaddr *)&serv_addr_prover, sizeof(serv_addr_prover));
 		
 		str = to_string(PROCESS_BLOCK_NUM);
@@ -126,7 +132,7 @@ bool verifyProof(int PROCESS_BLOCK_NUM) {
 	GF256 gf256(0x11B); //100011011
 	
 	//generate random bolck number unique
-  	srand(SEED_BLOCK_NUMBER); // ----------------------------------------------------- SEED_VECTOR_VALUE ----------------------------------------------------//
+  	srand(SEED_BLOCK_NUMBER); // ----------------------------------------------------- SEED_BLOCK_NUMBER ----------------------------------------------------//
   	
   	unordered_map<int,bool>hash;
   	vector<int>block_ind(PROCESS_BLOCK_NUM);
