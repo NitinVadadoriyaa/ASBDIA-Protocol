@@ -28,7 +28,7 @@ bool verifyProof(int PROCESS_BLOCK_NUM);
 void Send_msg(const char *server_ip);
 
 int main() {
-	Send_msg("172.16.15.6");
+	Send_msg("127.0.0.0");
 	return 0;
 }
 
@@ -92,7 +92,7 @@ void Send_msg(const char *server_ip) {
 			serv_addr_admin.sin_family = AF_INET;
 			serv_addr_admin.sin_port = htons(8005); // os automatically assign available port
 			
-			const char *server_ip_admin = "172.16.15.7";
+			const char *server_ip_admin = "127.0.0.0";
 			if (inet_pton(AF_INET, server_ip_admin, &serv_addr_admin.sin_addr) <= 0) {
 				perror("inet_pton");
 				return;
